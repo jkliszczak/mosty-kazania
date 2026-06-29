@@ -147,7 +147,7 @@
   ul.list{list-style:none}
   li.row{border-bottom:1px solid var(--line);cursor:pointer;transition:background .15s}
   li.row:hover{background:var(--card)}
-  .row-inner{display:grid;grid-template-columns:96px 1fr auto auto;align-items:center;
+  .row-inner{display:grid;grid-template-columns:96px 1fr auto auto auto;align-items:center;
     gap:18px;padding:18px 8px}
   .row .date{font-family:var(--mono);font-size:12px;color:var(--muted);white-space:nowrap}
   .row .main .ttl{font-family:var(--serif);font-weight:500;font-size:19px;
@@ -160,6 +160,13 @@
   li.row:hover .go{background:var(--ink);border-color:var(--ink);color:#fff}
   li.row.playing{background:var(--accent-soft)}
   li.row.playing .go{background:var(--accent);border-color:var(--accent);color:#fff}
+  .row .dl{width:38px;height:38px;border-radius:50%;border:1px solid var(--line);
+    display:grid;place-items:center;color:var(--muted);transition:all .15s;flex:none;
+    background:transparent;cursor:pointer;text-decoration:none}
+  .row .dl:hover{border-color:var(--accent);color:var(--accent)}
+  .pdl{flex:none;width:34px;height:34px;border:0;background:transparent;cursor:pointer;
+    color:var(--faint);border-radius:50%;display:grid;place-items:center;transition:color .15s,background .15s}
+  .pdl:hover{color:var(--ink);background:var(--line)}
 
   .empty{padding:60px 8px;text-align:center;color:var(--muted)}
   .empty p{font-family:var(--serif);font-size:18px;color:var(--ink);margin-bottom:6px}
@@ -202,6 +209,7 @@
     .row-inner{grid-template-columns:1fr auto;gap:10px 14px;padding:16px 6px}
     .row .date{grid-column:1/-1;order:-1}
     .row .seria{display:none}
+    .row .dl{display:none}
     .hero{padding:34px 0 30px}
     .pmeta{width:auto;flex:1}
     .ptrack{display:none}
@@ -285,6 +293,9 @@
       <input class="seek" id="seek" type="range" min="0" max="1000" value="0" aria-label="Pozycja nagrania">
       <span class="ptime" id="pDur">0:00</span>
     </div>
+    <button class="pdl" id="pDl" aria-label="Pobierz kazanie">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v10M7 15l5 5 5-5"/><path d="M4 20h16"/></svg>
+    </button>
     <button class="pclose" id="pClose" aria-label="Zamknij odtwarzacz">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg>
     </button>
@@ -459,6 +470,7 @@ function renderList(){
           <div class="sub">${esc(s.mowca)}${s.fragment?" · "+esc(s.fragment):""}</div>
         </div>
         ${s.seria?`<span class="seria">${esc(s.seria)}</span>`:`<span></span>`}
+        <button class="dl" onclick="downloadAudio(${i},event)" aria-label="Pobierz"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v10M7 15l5 5 5-5"/><path d="M4 20h16"/></svg></button>
         <span class="go"><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></span>
       </div>
     </li>`;
@@ -499,6 +511,23 @@ audio.addEventListener("ended",()=>setPpIcon(false));
 $("#seek").addEventListener("input",e=>{
   if(audio.duration) audio.currentTime=(e.target.value/1000)*audio.duration;
 });
+
+/* ---------- download ---------- */
+async function downloadAudio(i, e){
+  e.stopPropagation();
+  const s=DATA[i]; if(!s||!s.audio) return;
+  try{
+    const res=await fetch(s.audio);
+    const blob=await res.blob();
+    const url=URL.createObjectURL(blob);
+    const a=document.createElement("a");
+    a.href=url;
+    a.download=(s.tytul||"kazanie")+".mp3";
+    a.click();
+    setTimeout(()=>URL.revokeObjectURL(url),10000);
+  }catch(_){ window.open(s.audio,"_blank"); }
+}
+$("#pDl").onclick=()=>{ if(current!==null) downloadAudio(current,{stopPropagation:()=>{}}); };
 
 /* ---------- search ---------- */
 $("#q").addEventListener("input",e=>{state.q=e.target.value;renderList();});

@@ -10,21 +10,27 @@
   ============================================================
   KONFIGURACJA  —  to jedyne miejsce, które edytujesz
   ============================================================
-  1. W Arkuszu Google zrób nagłówki kolumn (dowolna kolejność):
-       data | tytul | mowca | seria | opis | fragment | audio | okladka
-     - data:     2026-06-22  albo  22.06.2026
-     - audio:    link „udostępnij" z Dysku Google
-                 (https://drive.google.com/file/d/PLIK_ID/view)  albo zwykły URL do MP3
-     - okladka:  (opcjonalnie) URL obrazka — można zostawić puste
-  2. Udostępnij Arkusz: „Każdy z linkiem → Przeglądający".
-  3. Wklej ID arkusza poniżej (to długi ciąg z URL-a między /d/ a /edit).
-     Zostaw puste, żeby zobaczyć tryb demo.
+  1. Utwórz folder na Dysku Google i udostępnij go:
+     „Każdy z linkiem → Przeglądający"
+     ID folderu to ciąg z URL-a po /folders/
+
+  2. Utwórz klucz API w Google Cloud Console:
+     console.cloud.google.com → APIs & Services → Credentials
+     → Create credentials → API key
+     Włącz „Google Drive API" w bibliotece.
+     Ogranicz klucz do Drive API + swojej domeny (zalecane).
+
+  3. Wklej oba poniżej. Zostaw puste, żeby zobaczyć tryb demo.
+
+  FORMAT NAZWY PLIKU (separator: " | "):
+    2026-06-22 | Paweł Kowalczyk | Most do Ojca | Ewangelia Jana | Jan 14,1-6.mp3
+    data         mówca              tytuł           seria (opcja)    fragment (opcja)
   ============================================================
 -->
 <script>
   const CONFIG = {
-    SHEET_ID:    "12LEzVZyYl-WRaliAu3BRq_9eZbWcEz3d-VJ8UQ1cGOo",          // <— wklej tutaj ID Arkusza
-    SHEET_NAME:  "Arkusz1",   // nazwa zakładki w Arkuszu
+    API_KEY:   "",   // <— klucz API Google
+    FOLDER_ID: "",   // <— ID folderu na Dysku Google
   };
 </script>
 
@@ -289,13 +295,13 @@
 <script>
 /* ---------- sample data (demo) ---------- */
 const SAMPLE = [
-  {data:"2026-06-22",tytul:"Most do Ojca",mowca:"Paweł Kowalczyk",seria:"Ewangelia Jana",fragment:"Jan 14,1–6",opis:"Jezus mówi o sobie jako jedynej drodze do Ojca. Co to znaczy zaufać Komuś, kto sam jest mostem między nami a Bogiem?",audio:"https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"},
-  {data:"2026-06-15",tytul:"Łaska, której nie da się zasłużyć",mowca:"Anna Wiśniewska",seria:"Listy Pawła",fragment:"Efezjan 2,1–10",opis:"O darmowej łasce, która zastaje nas martwymi i czyni żywymi — zanim zdążymy cokolwiek udowodnić.",audio:"https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3"},
-  {data:"2026-06-08",tytul:"Kiedy Bóg milczy",mowca:"Marek Lewandowski",seria:"Psalmy na trudny czas",fragment:"Psalm 13",opis:"Modlitwa „jak długo jeszcze?" nie jest brakiem wiary. Psalmista uczy nas mówić Bogu prawdę o swoim bólu.",audio:"https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3"},
-  {data:"2026-06-01",tytul:"Wspólnota, która niesie",mowca:"Paweł Kowalczyk",seria:"Kościół w działaniu",fragment:"Dzieje 2,42–47",opis:"Pierwszy kościół trwał w nauce, łamaniu chleba i modlitwach. Spojrzenie na to, czym wspólnota ma być dzisiaj.",audio:"https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3"},
-  {data:"2026-05-25",tytul:"Zagubiona owca",mowca:"Anna Wiśniewska",seria:"Przypowieści Jezusa",fragment:"Łukasz 15,1–7",opis:"Pasterz zostawia dziewięćdziesiąt dziewięć, żeby szukać jednej. O Bogu, który szuka pierwszy.",audio:"https://www.soundhelix.com/examples/mp3/SoundHelix-Song-5.mp3"},
-  {data:"2026-05-18",tytul:"Pokój, który przewyższa rozum",mowca:"Marek Lewandowski",seria:"Listy Pawła",fragment:"Filipian 4,4–9",opis:"Jak troskę zamienić w modlitwę — i czym jest pokój Boży, który strzeże serca i myśli.",audio:"https://www.soundhelix.com/examples/mp3/SoundHelix-Song-6.mp3"},
-  {data:"2026-05-11",tytul:"Nowe narodzenie",mowca:"Paweł Kowalczyk",seria:"Ewangelia Jana",fragment:"Jan 3,1–16",opis:"Nocna rozmowa Nikodema z Jezusem i pytanie, które wciąż wraca: co znaczy narodzić się na nowo?",audio:"https://www.soundhelix.com/examples/mp3/SoundHelix-Song-7.mp3"},
+  {data:"2026-06-22",tytul:"Most do Ojca",mowca:"Paweł Kowalczyk",seria:"Ewangelia Jana",fragment:"Jan 14,1–6",audio:"https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"},
+  {data:"2026-06-15",tytul:"Łaska, której nie da się zasłużyć",mowca:"Anna Wiśniewska",seria:"Listy Pawła",fragment:"Efezjan 2,1–10",audio:"https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3"},
+  {data:"2026-06-08",tytul:"Kiedy Bóg milczy",mowca:"Marek Lewandowski",seria:"Psalmy na trudny czas",fragment:"Psalm 13",audio:"https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3"},
+  {data:"2026-06-01",tytul:"Wspólnota, która niesie",mowca:"Paweł Kowalczyk",seria:"Kościół w działaniu",fragment:"Dzieje 2,42–47",audio:"https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3"},
+  {data:"2026-05-25",tytul:"Zagubiona owca",mowca:"Anna Wiśniewska",seria:"Przypowieści Jezusa",fragment:"Łukasz 15,1–7",audio:"https://www.soundhelix.com/examples/mp3/SoundHelix-Song-5.mp3"},
+  {data:"2026-05-18",tytul:"Pokój, który przewyższa rozum",mowca:"Marek Lewandowski",seria:"Listy Pawła",fragment:"Filipian 4,4–9",audio:"https://www.soundhelix.com/examples/mp3/SoundHelix-Song-6.mp3"},
+  {data:"2026-05-11",tytul:"Nowe narodzenie",mowca:"Paweł Kowalczyk",seria:"Ewangelia Jana",fragment:"Jan 3,1–16",audio:"https://www.soundhelix.com/examples/mp3/SoundHelix-Song-7.mp3"},
 ];
 
 /* ---------- helpers ---------- */
@@ -316,63 +322,71 @@ function fmtLong(d){return d.getDate()+" "+MIES[d.getMonth()]+" "+d.getFullYear(
 function fmtShort(d){return String(d.getDate()).padStart(2,"0")+"."+String(d.getMonth()+1).padStart(2,"0")+"."+d.getFullYear();}
 function fmtTime(s){if(!s||isNaN(s))return"0:00";const m=Math.floor(s/60),x=Math.floor(s%60);return m+":"+String(x).padStart(2,"0");}
 
-/* turn a Drive share link into a playable URL */
-function audioUrl(raw){
-  raw=(raw||"").trim(); if(!raw) return "";
-  let m=raw.match(/\/file\/d\/([^/]+)/)||raw.match(/[?&]id=([^&]+)/);
-  if(m) return "https://drive.google.com/uc?export=download&id="+m[1];
-  return raw;
+/* parse filename: "2026-06-22 | Mówca | Tytuł | Seria | Fragment.mp3" */
+function parseFilename(name){
+  const base=name.replace(/\.[^/.]+$/,"");
+  const parts=base.split("|").map(p=>p.trim());
+  return {
+    data:  parts[0]||"",
+    mowca: parts[1]||"",
+    tytul: parts[2]||base,
+    seria: parts[3]||"",
+    fragment: parts[4]||"",
+  };
 }
 
-/* tiny CSV parser (handles quotes, commas, newlines) */
-function parseCSV(text){
-  const rows=[];let row=[],cur="",q=false;
-  for(let i=0;i<text.length;i++){
-    const c=text[i];
-    if(q){
-      if(c==='"'){ if(text[i+1]==='"'){cur+='"';i++;} else q=false; }
-      else cur+=c;
-    }else{
-      if(c==='"')q=true;
-      else if(c===","){row.push(cur);cur="";}
-      else if(c==="\n"){row.push(cur);rows.push(row);row=[];cur="";}
-      else if(c==="\r"){}
-      else cur+=c;
-    }
-  }
-  if(cur.length||row.length){row.push(cur);rows.push(row);}
-  return rows;
-}
-function rowsToObjects(rows){
-  if(!rows.length) return [];
-  const head=rows[0].map(h=>h.trim().toLowerCase());
-  return rows.slice(1).filter(r=>r.some(c=>c.trim())).map(r=>{
-    const o={};head.forEach((h,i)=>o[h]=(r[i]||"").trim());return o;
-  });
+async function fetchDrivePage(token){
+  let url="https://www.googleapis.com/drive/v3/files"
+    +"?q="+encodeURIComponent("'"+CONFIG.FOLDER_ID+"' in parents and trashed=false")
+    +"&key="+CONFIG.API_KEY
+    +"&fields=nextPageToken,files(id,name)"
+    +"&orderBy=name+desc"
+    +"&pageSize=100";
+  if(token) url+="&pageToken="+token;
+  const res=await fetch(url);
+  if(!res.ok) throw new Error("Drive API "+res.status);
+  return res.json();
 }
 
 async function loadData(){
-  if(CONFIG.SHEET_ID){
+  if(CONFIG.API_KEY && CONFIG.FOLDER_ID){
     try{
-      const url="https://docs.google.com/spreadsheets/d/"+CONFIG.SHEET_ID+
-        "/gviz/tq?tqx=out:csv&sheet="+encodeURIComponent(CONFIG.SHEET_NAME);
-      const res=await fetch(url);
-      if(!res.ok) throw new Error(res.status);
-      const objs=rowsToObjects(parseCSV(await res.text()));
-      if(objs.length){ return objs.map(normalize); }
-      throw new Error("pusty arkusz");
-    }catch(e){ console.warn("Nie udało się wczytać Arkusza, używam danych demo:",e); }
+      let files=[], token=null;
+      do{
+        const page=await fetchDrivePage(token);
+        files=files.concat(page.files||[]);
+        token=page.nextPageToken||null;
+      }while(token);
+      const audio_files=files.filter(f=>/\.(mp3|m4a|wav|ogg|aac)$/i.test(f.name));
+      if(audio_files.length) return audio_files.map(normalizeFromFile);
+      throw new Error("brak plików audio w folderze");
+    }catch(e){ console.warn("Drive API — używam danych demo:",e); }
   }
   isDemo=true;
-  return SAMPLE.map(normalize);
+  return SAMPLE.map(normalizeSample);
 }
-function normalize(o){
+
+function normalizeFromFile(file){
+  const meta=parseFilename(file.name);
+  return {
+    data: meta.data, _d: parseDate(meta.data),
+    tytul: meta.tytul,
+    mowca: meta.mowca,
+    seria: meta.seria,
+    fragment: meta.fragment,
+    opis: "",
+    audio: "https://drive.google.com/uc?export=download&id="+file.id,
+    okladka: ""
+  };
+}
+
+function normalizeSample(o){
   return {
     data:o.data||"", _d:parseDate(o.data),
     tytul:o.tytul||"Bez tytułu",
     mowca:o.mowca||"", seria:o.seria||"",
-    opis:o.opis||"", fragment:o.fragment||"",
-    audio:audioUrl(o.audio), okladka:o.okladka||""
+    opis:"", fragment:o.fragment||"",
+    audio:o.audio||"", okladka:""
   };
 }
 

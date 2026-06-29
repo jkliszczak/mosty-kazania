@@ -375,7 +375,7 @@ function normalizeFromFile(file){
     seria: meta.seria,
     fragment: meta.fragment,
     opis: "",
-    audio: "https://drive.google.com/uc?export=download&id="+file.id,
+    audio: "https://www.googleapis.com/drive/v3/files/"+file.id+"?alt=media&key="+CONFIG.API_KEY,
     okladka: ""
   };
 }

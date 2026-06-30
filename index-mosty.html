@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kazania — Kościół MOSTY</title>
+<meta name="description" content="Niedzielne kazania Kościoła MOSTY — słuchaj online.">
+
+<!--
+  ============================================================
+  WERSJA ALTERNATYWNA — branding MOSTY (grafit + żółty)
+  Nie jest to wersja główna strony. Patrz index.html.
+  ============================================================
+  KONFIGURACJA  —  to jedyne miejsce, które edytujesz
+  ============================================================
+  1. Utwórz folder na Dysku Google i udostępnij go:
+     „Każdy z linkiem → Przeglądający"
+     ID folderu to ciąg z URL-a po /folders/
+
+  2. Utwórz klucz API w Google Cloud Console:
+     console.cloud.google.com → APIs & Services → Credentials
+     → Create credentials → API key
+     Włącz „Google Drive API" w bibliotece.
+     Ogranicz klucz do Drive API + swojej domeny (zalecane).
+
+  3. Wklej oba poniżej. Zostaw puste, żeby zobaczyć tryb demo.
+
+  FORMAT NAZWY PLIKU (separator: " | "):
+    2026-06-22 | Paweł Kowalczyk | Most do Ojca | Ewangelia Jana | Jan 14,1-6.mp3
+    data         mówca              tytuł           seria (opcja)    fragment (opcja)
+  ============================================================
+-->
+<script>
+  const CONFIG = {
+    API_KEY:   "AIzaSyCjZ0HUkobxJjCcI-wSnLJtipV6Qvo5K58",
+    FOLDER_ID: "1ExMeH81ykGwIS29t3DdmFns7Sto_UDTZ",
+  };
+</script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --paper:#1E1E1E;
+    --card:#282828;
+    --card-hi:#303030;
+    --ink:#FFFFFF;
+    --muted:#B7B6B0;
+    --faint:#7C7B76;
+    --line:rgba(255,255,255,.10);
+    --accent:#F5C518;
+    --accent-ink:#1E1E1E;
+    --sans:"Poppins",system-ui,sans-serif;
+    --mono:"JetBrains Mono",ui-monospace,monospace;
+    --maxw:960px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    background:var(--paper);color:var(--ink);
+    font-family:var(--sans);font-weight:400;line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+    padding-bottom:100px;
+  }
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 24px}
+  a{color:inherit}
+  ::selection{background:var(--accent);color:var(--accent-ink)}
+
+  /* ---------- logo ---------- */
+  .logo{display:inline-flex;align-items:center;gap:2px;font-weight:800;
+    font-size:20px;letter-spacing:.01em}
+  .logo .arc{position:relative;width:17px;height:17px;display:inline-block;margin:0 1px}
+  .logo .arc svg{position:absolute;top:-9px;left:0}
+  .kicker{font-family:var(--mono);font-size:11px;letter-spacing:.18em;
+    text-transform:uppercase;color:var(--muted)}
+
+  /* ---------- masthead ---------- */
+  header.site{padding:28px 0 24px;border-bottom:1px solid var(--line)}
+  .masthead{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+  .word{display:flex;align-items:center;gap:14px}
+  .links{display:flex;gap:20px;align-items:center}
+  .links a{font-size:13.5px;font-weight:500;color:var(--muted);text-decoration:none;
+    display:inline-flex;align-items:center;gap:6px;transition:color .15s}
+  .links a:hover{color:var(--accent)}
+  .links svg{width:15px;height:15px;display:block}
+  .demo-pill{font-family:var(--mono);font-size:10.5px;letter-spacing:.06em;
+    color:var(--accent-ink);background:var(--accent);font-weight:600;
+    padding:4px 10px;border-radius:999px;white-space:nowrap}
+
+  /* ---------- hero / latest ---------- */
+  .hero{padding-top:54px;padding-bottom:46px;border-bottom:1px solid var(--line)}
+  .hero .eyebrow{font-family:var(--mono);font-size:11.5px;letter-spacing:.15em;font-weight:500;
+    text-transform:uppercase;color:var(--accent);margin-bottom:20px;
+    display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+  .hero .eyebrow .tag{color:var(--muted)}
+  .hero h1{font-weight:800;
+    font-size:clamp(34px,6.2vw,62px);line-height:1.03;letter-spacing:-.02em;
+    max-width:14ch;text-transform:uppercase}
+  .hero .by{margin-top:20px;font-size:17px;font-weight:500;color:var(--muted)}
+  .hero .by b{color:var(--ink);font-weight:600}
+  .hero .desc{margin-top:16px;font-size:16px;max-width:60ch;color:var(--muted)}
+  .hero .scripture{margin-top:14px;font-style:italic;font-weight:500;
+    font-size:16px;color:var(--accent)}
+  .hero .cta{margin-top:32px;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+
+  .play-btn{appearance:none;border:0;cursor:pointer;font-family:var(--sans);
+    display:inline-flex;align-items:center;gap:11px;
+    background:var(--accent);color:var(--accent-ink);font-size:15px;font-weight:700;
+    padding:14px 24px 14px 19px;border-radius:999px;transition:transform .15s,opacity .15s}
+  .play-btn:hover{opacity:.92}
+  .play-btn:active{transform:scale(.98)}
+  .play-btn .ic{width:20px;height:20px;display:grid;place-items:center}
+  .play-btn .dur{font-family:var(--mono);font-size:12.5px;opacity:.65}
+
+  /* ---------- controls ---------- */
+  .controls{padding:26px 0;position:sticky;top:0;background:var(--paper);z-index:20;
+    border-bottom:1px solid var(--line)}
+  .searchrow{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+  .search{flex:1;min-width:200px;position:relative}
+  .search svg{position:absolute;left:14px;top:50%;transform:translateY(-50%);
+    width:16px;height:16px;color:var(--faint)}
+  .search input{width:100%;font-family:var(--sans);font-size:15px;color:var(--ink);
+    background:var(--card);border:1px solid var(--line);border-radius:12px;
+    padding:12px 14px 12px 40px;transition:border-color .15s}
+  .search input:focus{outline:none;border-color:var(--accent)}
+  .search input::placeholder{color:var(--faint)}
+  select.speaker{font-family:var(--sans);font-size:14px;font-weight:500;color:var(--ink);
+    background:var(--card);border:1px solid var(--line);border-radius:12px;
+    padding:12px 34px 12px 14px;cursor:pointer;appearance:none;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23B7B6B0' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat:no-repeat;background-position:right 12px center}
+  select.speaker:focus{outline:none;border-color:var(--accent)}
+  .pills{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+  .pill{font-family:var(--sans);font-size:13px;font-weight:500;cursor:pointer;
+    background:transparent;border:1px solid var(--line);color:var(--muted);
+    padding:7px 15px;border-radius:999px;transition:all .15s}
+  .pill:hover{border-color:var(--accent);color:var(--accent)}
+  .pill.active{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+
+  /* ---------- list ---------- */
+  .listhead{display:flex;align-items:baseline;justify-content:space-between;
+    padding:36px 0 16px}
+  .listhead h2{font-weight:700;font-size:19px;text-transform:uppercase;letter-spacing:.01em}
+  .listhead .count{font-family:var(--mono);font-size:12px;color:var(--faint)}
+  ul.list{list-style:none;display:flex;flex-direction:column;gap:12px}
+  li.row{cursor:pointer;transition:background .15s,transform .15s;
+    background:var(--card);border-radius:18px;border:1px solid var(--line)}
+  li.row:hover{background:var(--card-hi)}
+  .row-inner{display:grid;grid-template-columns:auto 1fr auto auto auto;align-items:center;
+    gap:18px;padding:16px 18px}
+  .row .date{font-family:var(--mono);font-size:11.5px;font-weight:600;color:var(--accent-ink);
+    background:var(--accent);white-space:nowrap;padding:6px 12px;border-radius:999px}
+  .row .main .ttl{font-weight:700;font-size:18px;
+    line-height:1.25;letter-spacing:-.005em}
+  .row .main .sub{font-size:13.5px;color:var(--muted);margin-top:3px;font-weight:400}
+  .row .seria{font-size:11.5px;font-weight:600;color:var(--ink);background:rgba(255,255,255,.08);
+    padding:5px 12px;border-radius:999px;white-space:nowrap}
+  .row .go{width:40px;height:40px;border-radius:50%;border:none;
+    display:grid;place-items:center;color:var(--accent-ink);background:var(--accent);
+    transition:all .15s;flex:none}
+  li.row:hover .go{transform:scale(1.06)}
+  li.row.playing{border-color:var(--accent)}
+  li.row.playing .go{background:var(--ink)}
+  .row .dl{width:40px;height:40px;border-radius:50%;border:1px solid var(--line);
+    display:grid;place-items:center;color:var(--muted);transition:all .15s;flex:none;
+    background:transparent;cursor:pointer;text-decoration:none}
+  .row .dl:hover{border-color:var(--accent);color:var(--accent)}
+  .pdl{flex:none;width:34px;height:34px;border:0;background:transparent;cursor:pointer;
+    color:var(--muted);border-radius:50%;display:grid;place-items:center;transition:color .15s,background .15s}
+  .pdl:hover{color:var(--ink);background:var(--line)}
+
+  .empty{padding:60px 8px;text-align:center;color:var(--muted)}
+  .empty p{font-weight:700;font-size:18px;color:var(--ink);margin-bottom:6px}
+
+  footer.site{padding:48px 0 30px;color:var(--faint);font-size:13px;
+    display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
+
+  /* ---------- sticky player ---------- */
+  .player{position:fixed;left:0;right:0;bottom:0;z-index:50;
+    background:rgba(30,30,30,.92);backdrop-filter:blur(12px);
+    border-top:1px solid var(--line);transform:translateY(110%);
+    transition:transform .28s cubic-bezier(.2,.7,.3,1)}
+  .player.up{transform:translateY(0)}
+  .player-inner{max-width:var(--maxw);margin:0 auto;padding:13px 24px;
+    display:flex;align-items:center;gap:18px}
+  .pp{width:46px;height:46px;flex:none;border:0;border-radius:50%;cursor:pointer;
+    background:var(--accent);color:var(--accent-ink);display:grid;place-items:center;transition:transform .15s}
+  .pp:hover{transform:scale(1.05)}
+  .pmeta{flex:none;width:210px;min-width:0}
+  .pmeta .pt{font-weight:700;font-size:15px;
+    white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .pmeta .ps{font-size:12px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .ptrack{flex:1;display:flex;align-items:center;gap:12px;min-width:0}
+  .ptime{font-family:var(--mono);font-size:11.5px;color:var(--muted);white-space:nowrap}
+  .seek{flex:1;-webkit-appearance:none;appearance:none;height:18px;background:transparent;cursor:pointer}
+  .seek::-webkit-slider-runnable-track{height:3px;border-radius:2px;
+    background:linear-gradient(to right,var(--accent) var(--p,0%),var(--line) var(--p,0%))}
+  .seek::-moz-range-track{height:3px;border-radius:2px;background:var(--line)}
+  .seek::-moz-range-progress{height:3px;border-radius:2px;background:var(--accent)}
+  .seek::-webkit-slider-thumb{-webkit-appearance:none;width:12px;height:12px;border-radius:50%;
+    background:var(--accent);margin-top:-4.5px;border:2px solid var(--paper)}
+  .seek::-moz-range-thumb{width:12px;height:12px;border-radius:50%;background:var(--accent);border:2px solid var(--paper)}
+  .pclose{flex:none;width:34px;height:34px;border:0;background:transparent;cursor:pointer;
+    color:var(--muted);border-radius:50%;display:grid;place-items:center;transition:color .15s,background .15s}
+  .pclose:hover{color:var(--ink);background:var(--line)}
+
+  @media (max-width:680px){
+    .row-inner{grid-template-columns:1fr auto;gap:10px 14px;padding:16px}
+    .row .date{grid-column:1/-1;order:-1;width:fit-content}
+    .row .seria{display:none}
+    .row .dl{display:none}
+    .hero{padding-top:38px;padding-bottom:34px}
+    .pmeta{width:auto;flex:1}
+    .ptrack{display:none}
+    .player-inner{gap:12px}
+  }
+  @media (prefers-reduced-motion:reduce){
+    *{transition:none!important;animation:none!important}
+  }
+
+  .reveal{opacity:0;transform:translateY(10px);animation:rise .6s ease forwards}
+  @keyframes rise{to{opacity:1;transform:none}}
+</style>
+</head>
+<body>
+
+<header class="site">
+  <div class="wrap masthead">
+    <div class="word">
+      <span class="logo">M<span class="arc"><svg width="17" height="17" viewBox="0 0 17 17"><path d="M2 12a6.5 6.5 0 0 1 13 0" fill="none" stroke="var(--accent)" stroke-width="3" stroke-linecap="round"/></svg></span>STY</span>
+      <span class="kicker">Kazania</span>
+    </div>
+    <div class="links">
+      <span class="demo-pill" id="demoPill" hidden>tryb demo — podłącz Dysk</span>
+      <a href="https://www.facebook.com/kosciolmosty" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M22 12a10 10 0 1 0-11.6 9.9v-7H7.9V12h2.5V9.8c0-2.5 1.5-3.9 3.8-3.9 1.1 0 2.2.2 2.2.2v2.5h-1.2c-1.2 0-1.6.8-1.6 1.6V12h2.7l-.4 2.9h-2.3v7A10 10 0 0 0 22 12Z"/></svg>
+        Facebook
+      </a>
+    </div>
+  </div>
+</header>
+
+<main id="app">
+  <section class="hero wrap" id="hero" aria-live="polite"></section>
+
+  <div class="controls">
+    <div class="wrap">
+      <div class="searchrow">
+        <label class="search">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+          <input id="q" type="search" placeholder="Szukaj kazania, mówcy lub serii…" autocomplete="off">
+        </label>
+        <select class="speaker" id="speaker" aria-label="Filtruj według mówcy">
+          <option value="">Wszyscy mówcy</option>
+        </select>
+      </div>
+      <div class="pills" id="seriesPills"></div>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <div class="listhead">
+      <h2>Archiwum</h2>
+      <span class="count" id="count"></span>
+    </div>
+    <ul class="list" id="list"></ul>
+  </div>
+</main>
+
+<footer class="site">
+  <div class="wrap" style="display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;width:100%">
+    <span>Kościół MOSTY · Wrocław</span>
+    <span class="kicker">słuchaj · rozważaj</span>
+  </div>
+</footer>
+
+<!-- sticky player -->
+<div class="player" id="player" role="region" aria-label="Odtwarzacz">
+  <div class="player-inner">
+    <button class="pp" id="pp" aria-label="Odtwórz / wstrzymaj">
+      <svg id="ppIcon" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+    </button>
+    <div class="pmeta">
+      <div class="pt" id="pTitle">—</div>
+      <div class="ps" id="pSub">—</div>
+    </div>
+    <div class="ptrack">
+      <span class="ptime" id="pCur">0:00</span>
+      <input class="seek" id="seek" type="range" min="0" max="1000" value="0" aria-label="Pozycja nagrania">
+      <span class="ptime" id="pDur">0:00</span>
+    </div>
+    <button class="pdl" id="pDl" aria-label="Pobierz kazanie">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v10M7 15l5 5 5-5"/><path d="M4 20h16"/></svg>
+    </button>
+    <button class="pclose" id="pClose" aria-label="Zamknij odtwarzacz">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg>
+    </button>
+  </div>
+</div>
+<audio id="audio" preload="none"></audio>
+
+<script>
+/* ---------- sample data (demo) ---------- */
+const SAMPLE = [
+  {data:"2026-06-22",tytul:"Most do Ojca",mowca:"Paweł Kowalczyk",seria:"Ewangelia Jana",fragment:"Jan 14,1–6",audio:"https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"},
+  {data:"2026-06-15",tytul:"Łaska, której nie da się zasłużyć",mowca:"Anna Wiśniewska",seria:"Listy Pawła",fragment:"Efezjan 2,1–10",audio:"https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3"},
+  {data:"2026-06-08",tytul:"Kiedy Bóg milczy",mowca:"Marek Lewandowski",seria:"Psalmy na trudny czas",fragment:"Psalm 13",audio:"https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3"},
+  {data:"2026-06-01",tytul:"Wspólnota, która niesie",mowca:"Paweł Kowalczyk",seria:"Kościół w działaniu",fragment:"Dzieje 2,42–47",audio:"https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3"},
+  {data:"2026-05-25",tytul:"Zagubiona owca",mowca:"Anna Wiśniewska",seria:"Przypowieści Jezusa",fragment:"Łukasz 15,1–7",audio:"https://www.soundhelix.com/examples/mp3/SoundHelix-Song-5.mp3"},
+  {data:"2026-05-18",tytul:"Pokój, który przewyższa rozum",mowca:"Marek Lewandowski",seria:"Listy Pawła",fragment:"Filipian 4,4–9",audio:"https://www.soundhelix.com/examples/mp3/SoundHelix-Song-6.mp3"},
+  {data:"2026-05-11",tytul:"Nowe narodzenie",mowca:"Paweł Kowalczyk",seria:"Ewangelia Jana",fragment:"Jan 3,1–16",audio:"https://www.soundhelix.com/examples/mp3/SoundHelix-Song-7.mp3"},
+];
+
+/* ---------- helpers ---------- */
+const $=s=>document.querySelector(s);
+const audio=$("#audio");
+let DATA=[], current=null, isDemo=false;
+
+function parseDate(s){
+  s=(s||"").trim();
+  let m=s.match(/^(\d{4})-(\d{1,2})-(\d{1,2})/);
+  if(m) return new Date(+m[1],+m[2]-1,+m[3]);
+  m=s.match(/^(\d{1,2})[.\/](\d{1,2})[.\/](\d{4})/);
+  if(m) return new Date(+m[3],+m[2]-1,+m[1]);
+  const d=new Date(s); return isNaN(d)?new Date(0):d;
+}
+const MIES=["stycznia","lutego","marca","kwietnia","maja","czerwca","lipca","sierpnia","września","października","listopada","grudnia"];
+function fmtLong(d){return d.getDate()+" "+MIES[d.getMonth()]+" "+d.getFullYear();}
+function fmtShort(d){return String(d.getDate()).padStart(2,"0")+"."+String(d.getMonth()+1).padStart(2,"0")+"."+d.getFullYear();}
+function fmtTime(s){if(!s||isNaN(s))return"0:00";const m=Math.floor(s/60),x=Math.floor(s%60);return m+":"+String(x).padStart(2,"0");}
+
+/* parse filename: "2026-06-22 | Mówca | Tytuł | Seria | Fragment.mp3" */
+function parseFilename(name){
+  const base=name.replace(/\.[^/.]+$/,"");
+  const parts=base.split("|").map(p=>p.trim());
+  return {
+    data:  parts[0]||"",
+    mowca: parts[1]||"",
+    tytul: parts[2]||base,
+    seria: parts[3]||"",
+    fragment: parts[4]||"",
+  };
+}
+
+async function fetchDrivePage(token){
+  let url="https://www.googleapis.com/drive/v3/files"
+    +"?q="+encodeURIComponent("'"+CONFIG.FOLDER_ID+"' in parents and trashed=false")
+    +"&key="+CONFIG.API_KEY
+    +"&fields=nextPageToken,files(id,name)"
+    +"&orderBy=name+desc"
+    +"&pageSize=100";
+  if(token) url+="&pageToken="+token;
+  const res=await fetch(url);
+  if(!res.ok) throw new Error("Drive API "+res.status);
+  return res.json();
+}
+
+async function loadData(){
+  if(CONFIG.API_KEY && CONFIG.FOLDER_ID){
+    try{
+      let files=[], token=null;
+      do{
+        const page=await fetchDrivePage(token);
+        files=files.concat(page.files||[]);
+        token=page.nextPageToken||null;
+      }while(token);
+      const audio_files=files.filter(f=>/\.(mp3|m4a|wav|ogg|aac)$/i.test(f.name));
+      if(audio_files.length) return audio_files.map(normalizeFromFile);
+      throw new Error("brak plików audio w folderze");
+    }catch(e){ console.warn("Drive API — używam danych demo:",e); }
+  }
+  isDemo=true;
+  return SAMPLE.map(normalizeSample);
+}
+
+function normalizeFromFile(file){
+  const meta=parseFilename(file.name);
+  return {
+    data: meta.data, _d: parseDate(meta.data),
+    tytul: meta.tytul,
+    mowca: meta.mowca,
+    seria: meta.seria,
+    fragment: meta.fragment,
+    opis: "",
+    audio: "https://www.googleapis.com/drive/v3/files/"+file.id+"?alt=media&key="+CONFIG.API_KEY,
+    okladka: ""
+  };
+}
+
+function normalizeSample(o){
+  return {
+    data:o.data||"", _d:parseDate(o.data),
+    tytul:o.tytul||"Bez tytułu",
+    mowca:o.mowca||"", seria:o.seria||"",
+    opis:"", fragment:o.fragment||"",
+    audio:o.audio||"", okladka:""
+  };
+}
+
+/* ---------- rendering ---------- */
+const state={q:"",seria:"",mowca:""};
+
+function filtered(){
+  return DATA.filter(s=>{
+    if(state.seria && s.seria!==state.seria) return false;
+    if(state.mowca && s.mowca!==state.mowca) return false;
+    if(state.q){
+      const t=(s.tytul+" "+s.mowca+" "+s.seria+" "+s.opis).toLowerCase();
+      if(!t.includes(state.q.toLowerCase())) return false;
+    }
+    return true;
+  });
+}
+
+function renderHero(){
+  const s=DATA[0]; if(!s){$("#hero").innerHTML="";return;}
+  $("#hero").innerHTML=`
+    <div class="reveal">
+      <div class="eyebrow">
+        <span>Najnowsze kazanie</span>
+        <span class="tag">${fmtLong(s._d)}</span>
+        ${s.seria?`<span class="tag">${esc(s.seria)}</span>`:""}
+      </div>
+      <h1>${esc(s.tytul)}</h1>
+      ${s.mowca?`<div class="by"><b>${esc(s.mowca)}</b></div>`:""}
+      ${s.opis?`<p class="desc">${esc(s.opis)}</p>`:""}
+      ${s.fragment?`<div class="scripture">${esc(s.fragment)}</div>`:""}
+      <div class="cta">
+        <button class="play-btn" onclick="playIndex(0)">
+          <span class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></span>
+          Słuchaj kazania
+        </button>
+      </div>
+    </div>`;
+}
+
+function renderControls(){
+  const series=[...new Set(DATA.map(s=>s.seria).filter(Boolean))];
+  const sp=$("#seriesPills");
+  sp.innerHTML=`<button class="pill ${state.seria===""?"active":""}" data-s="">Wszystkie serie</button>`+
+    series.map(x=>`<button class="pill ${state.seria===x?"active":""}" data-s="${esc(x)}">${esc(x)}</button>`).join("");
+  sp.querySelectorAll(".pill").forEach(b=>b.onclick=()=>{state.seria=b.dataset.s;renderControls();renderList();});
+
+  const speakers=[...new Set(DATA.map(s=>s.mowca).filter(Boolean))];
+  const sel=$("#speaker");
+  sel.innerHTML=`<option value="">Wszyscy mówcy</option>`+
+    speakers.map(x=>`<option value="${esc(x)}" ${state.mowca===x?"selected":""}>${esc(x)}</option>`).join("");
+}
+
+function renderList(){
+  const items=filtered();
+  $("#count").textContent=items.length+(items.length===1?" kazanie":(items.length<5&&items.length>1?" kazania":" kazań"));
+  const list=$("#list");
+  if(!items.length){
+    list.innerHTML=`<div class="empty"><p>Nic nie znaleźliśmy</p><span>Spróbuj innego słowa albo wyczyść filtry.</span></div>`;
+    return;
+  }
+  list.innerHTML=items.map(s=>{
+    const i=DATA.indexOf(s);
+    const on=current===i?"playing":"";
+    return `<li class="row ${on}" onclick="playIndex(${i})">
+      <div class="row-inner">
+        <span class="date">${fmtShort(s._d)}</span>
+        <div class="main">
+          <div class="ttl">${esc(s.tytul)}</div>
+          <div class="sub">${esc(s.mowca)}${s.fragment?" · "+esc(s.fragment):""}</div>
+        </div>
+        ${s.seria?`<span class="seria">${esc(s.seria)}</span>`:`<span></span>`}
+        <button class="dl" onclick="downloadAudio(${i},event)" aria-label="Pobierz"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v10M7 15l5 5 5-5"/><path d="M4 20h16"/></svg></button>
+        <span class="go"><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></span>
+      </div>
+    </li>`;
+  }).join("");
+}
+function esc(s){return String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));}
+
+/* ---------- player ---------- */
+function playIndex(i){
+  const s=DATA[i]; if(!s) return;
+  if(current===i){ togglePlay(); return; }
+  current=i;
+  if(!s.audio){ alert("Brak pliku audio dla tego kazania."); return; }
+  audio.src=s.audio; audio.play().catch(()=>{});
+  $("#pTitle").textContent=s.tytul;
+  $("#pSub").textContent=[s.mowca,s.seria].filter(Boolean).join(" · ");
+  $("#player").classList.add("up");
+  renderList();
+}
+function togglePlay(){ audio.paused?audio.play():audio.pause(); }
+function setPpIcon(playing){
+  $("#ppIcon").innerHTML=playing
+    ? '<path d="M6 5h4v14H6zM14 5h4v14h-4z"/>'
+    : '<path d="M8 5v14l11-7z"/>';
+}
+$("#pp").onclick=togglePlay;
+$("#pClose").onclick=()=>{audio.pause();audio.removeAttribute("src");audio.load();
+  $("#player").classList.remove("up");current=null;renderList();};
+audio.addEventListener("play",()=>setPpIcon(true));
+audio.addEventListener("pause",()=>setPpIcon(false));
+audio.addEventListener("timeupdate",()=>{
+  const p=audio.duration?audio.currentTime/audio.duration:0;
+  const seek=$("#seek");seek.value=p*1000;seek.style.setProperty("--p",(p*100)+"%");
+  $("#pCur").textContent=fmtTime(audio.currentTime);
+});
+audio.addEventListener("loadedmetadata",()=>$("#pDur").textContent=fmtTime(audio.duration));
+audio.addEventListener("ended",()=>setPpIcon(false));
+$("#seek").addEventListener("input",e=>{
+  if(audio.duration) audio.currentTime=(e.target.value/1000)*audio.duration;
+});
+
+/* ---------- download ---------- */
+async function downloadAudio(i, e){
+  e.stopPropagation();
+  const s=DATA[i]; if(!s||!s.audio) return;
+  try{
+    const res=await fetch(s.audio);
+    const blob=await res.blob();
+    const url=URL.createObjectURL(blob);
+    const a=document.createElement("a");
+    a.href=url;
+    a.download=(s.tytul||"kazanie")+".mp3";
+    a.click();
+    setTimeout(()=>URL.revokeObjectURL(url),10000);
+  }catch(_){ window.open(s.audio,"_blank"); }
+}
+$("#pDl").onclick=()=>{ if(current!==null) downloadAudio(current,{stopPropagation:()=>{}}); };
+
+/* ---------- search ---------- */
+$("#q").addEventListener("input",e=>{state.q=e.target.value;renderList();});
+$("#speaker").addEventListener("change",e=>{state.mowca=e.target.value;renderList();});
+
+/* ---------- boot ---------- */
+(async()=>{
+  DATA=await loadData();
+  DATA.sort((a,b)=>b._d-a._d);
+  if(isDemo) $("#demoPill").hidden=false;
+  renderHero();renderControls();renderList();
+})();
+</script>
+</body>
+</html>

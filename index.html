@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Inspiracje — Kościół MOSTY</title>
 <meta name="description" content="Niedzielne inspiracje Kościoła MOSTY — słuchaj online.">
+<link rel="icon" href="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ0-uUlchum4G_l1JuX2I5IYpfdYY_JzX7IAcOUzLj-qaVpr8Rt31tRfevj&s=10">
 
 <!--
   ============================================================
@@ -508,7 +509,8 @@ function setPpIcon(playing){
 }
 $("#pp").onclick=togglePlay;
 $("#pClose").onclick=()=>{audio.pause();audio.removeAttribute("src");audio.load();
-  $("#player").classList.remove("up");current=null;renderList();};
+  $("#player").classList.remove("up");current=null;renderList();
+  localStorage.removeItem("mosty_current");localStorage.removeItem("mosty_time");};
 audio.addEventListener("play",()=>setPpIcon(true));
 audio.addEventListener("pause",()=>setPpIcon(false));
 audio.addEventListener("timeupdate",()=>{
@@ -539,6 +541,27 @@ async function downloadAudio(i, e){
 }
 $("#pDl").onclick=()=>{ if(current!==null) downloadAudio(current,{stopPropagation:()=>{}}); };
 
+/* ---------- localStorage ---------- */
+function saveState(){
+  if(current===null) return;
+  localStorage.setItem("mosty_current", current);
+  localStorage.setItem("mosty_time", audio.currentTime||0);
+}
+function restoreState(){
+  const i=localStorage.getItem("mosty_current");
+  const t=parseFloat(localStorage.getItem("mosty_time")||0);
+  if(i===null||!DATA[+i]) return;
+  current=+i;
+  const s=DATA[current];
+  audio.src=s.audio;
+  audio.currentTime=t;
+  $("#pTitle").textContent=s.tytul;
+  $("#pSub").textContent=[s.mowca,s.seria].filter(Boolean).join(" · ");
+  $("#player").classList.add("up");
+  renderList();
+}
+audio.addEventListener("timeupdate",saveState);
+
 /* ---------- search ---------- */
 $("#q").addEventListener("input",e=>{state.q=e.target.value;renderList();});
 $("#speaker").addEventListener("change",e=>{state.mowca=e.target.value;renderList();});
@@ -549,6 +572,7 @@ $("#speaker").addEventListener("change",e=>{state.mowca=e.target.value;renderLis
   DATA.sort((a,b)=>b._d-a._d);
   if(isDemo) $("#demoPill").hidden=false;
   renderHero();renderControls();renderList();
+  restoreState();
 })();
 </script>
 </body>

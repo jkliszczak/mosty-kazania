@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Kazania — Kościół MOSTY</title>
-<meta name="description" content="Niedzielne kazania Kościoła MOSTY — słuchaj online.">
+<title>Inspiracje — Kościół MOSTY</title>
+<meta name="description" content="Niedzielne inspiracje Kościoła MOSTY — słuchaj online.">
 
 <!--
   ============================================================
@@ -230,7 +230,7 @@
       <span class="bridge">
         <span class="name">Kościół <b>MOSTY</b></span>
         <span class="span"></span>
-        <span class="kicker">Kazania</span>
+        <span class="kicker">Inspiracje</span>
       </span>
     </div>
     <div class="links">
@@ -251,7 +251,7 @@
       <div class="searchrow">
         <label class="search">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
-          <input id="q" type="search" placeholder="Szukaj kazania, mówcy lub serii…" autocomplete="off">
+          <input id="q" type="search" placeholder="Szukaj inspiracji, mówcy lub serii…" autocomplete="off">
         </label>
         <select class="speaker" id="speaker" aria-label="Filtruj według mówcy">
           <option value="">Wszyscy mówcy</option>
@@ -292,7 +292,7 @@
       <input class="seek" id="seek" type="range" min="0" max="1000" value="0" aria-label="Pozycja nagrania">
       <span class="ptime" id="pDur">0:00</span>
     </div>
-    <button class="pdl" id="pDl" aria-label="Pobierz kazanie">
+    <button class="pdl" id="pDl" aria-label="Pobierz inspirację">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v10M7 15l5 5 5-5"/><path d="M4 20h16"/></svg>
     </button>
     <button class="pclose" id="pClose" aria-label="Zamknij odtwarzacz">
@@ -420,7 +420,7 @@ function renderHero(){
   $("#hero").innerHTML=`
     <div class="reveal">
       <div class="eyebrow">
-        <span>Najnowsze kazanie</span>
+        <span>Najnowsza inspiracja</span>
         <span>${fmtLong(s._d)}</span>
         ${s.seria?`<span class="tag">${esc(s.seria)}</span>`:""}
       </div>
@@ -431,7 +431,7 @@ function renderHero(){
       <div class="cta">
         <button class="play-btn" onclick="playIndex(0)">
           <span class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></span>
-          Słuchaj kazania
+          Słuchaj inspiracji
         </button>
       </div>
     </div>`;
@@ -452,7 +452,7 @@ function renderControls(){
 
 function renderList(){
   const items=filtered();
-  $("#count").textContent=items.length+(items.length===1?" kazanie":(items.length<5&&items.length>1?" kazania":" kazań"));
+  $("#count").textContent=items.length+(items.length===1?" inspiracja":(items.length<5&&items.length>1?" inspiracje":" inspiracji"));
   const list=$("#list");
   if(!items.length){
     list.innerHTML=`<div class="empty"><p>Nic nie znaleźliśmy</p><span>Spróbuj innego słowa albo wyczyść filtry.</span></div>`;
@@ -493,7 +493,7 @@ function playIndex(i){
   const s=DATA[i]; if(!s) return;
   if(current===i){ togglePlay(); return; }
   current=i;
-  if(!s.audio){ alert("Brak pliku audio dla tego kazania."); return; }
+  if(!s.audio){ alert("Brak pliku audio dla tej inspiracji."); return; }
   audio.src=s.audio; audio.play().catch(()=>{});
   $("#pTitle").textContent=s.tytul;
   $("#pSub").textContent=[s.mowca,s.seria].filter(Boolean).join(" · ");
@@ -532,7 +532,7 @@ async function downloadAudio(i, e){
     const url=URL.createObjectURL(blob);
     const a=document.createElement("a");
     a.href=url;
-    a.download=(s.tytul||"kazanie")+".mp3";
+    a.download=(s.tytul||"inspiracja")+".mp3";
     a.click();
     setTimeout(()=>URL.revokeObjectURL(url),10000);
   }catch(_){ window.open(s.audio,"_blank"); }

@@ -174,6 +174,25 @@
   .psh{flex:none;width:34px;height:34px;border:0;background:transparent;cursor:pointer;
     color:var(--faint);border-radius:50%;display:grid;place-items:center;transition:color .15s,background .15s}
   .psh:hover{color:var(--ink);background:var(--line)}
+  .autoplay-banner{position:fixed;inset:0;z-index:200;
+    background:rgba(23,24,27,.88);backdrop-filter:blur(8px);
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    gap:24px;padding:32px;text-align:center;animation:rise .3s ease}
+  .autoplay-banner .ab-kicker{font-family:var(--mono);font-size:11px;letter-spacing:.18em;
+    text-transform:uppercase;color:var(--muted)}
+  .autoplay-banner .ab-title{font-family:var(--serif);font-weight:500;
+    font-size:clamp(22px,4vw,38px);line-height:1.15;max-width:20ch}
+  .autoplay-banner .ab-by{font-size:15px;color:var(--muted)}
+  .autoplay-banner .ab-btn{appearance:none;border:0;cursor:pointer;
+    font-family:var(--sans);display:inline-flex;align-items:center;gap:12px;
+    background:var(--ink);color:#fff;font-size:16px;font-weight:500;
+    padding:16px 28px 16px 22px;border-radius:999px;
+    transition:transform .15s,opacity .15s;margin-top:8px}
+  .autoplay-banner .ab-btn:hover{opacity:.9}
+  .autoplay-banner .ab-btn:active{transform:scale(.97)}
+  .autoplay-banner .ab-skip{font-size:13px;color:var(--faint);cursor:pointer;
+    background:none;border:0;text-decoration:underline;text-underline-offset:3px}
+  .autoplay-banner .ab-skip:hover{color:var(--muted)}
   .toast{position:fixed;bottom:96px;left:50%;transform:translateX(-50%) translateY(12px);
     background:var(--ink);color:#fff;font-size:13px;font-weight:500;
     padding:10px 18px;border-radius:999px;opacity:0;pointer-events:none;
@@ -612,7 +631,29 @@ $("#speaker").addEventListener("change",e=>{state.mowca=e.target.value;renderLis
   const deepD=new URLSearchParams(location.search).get("d");
   if(deepD){
     const di=DATA.findIndex(s=>s.data===deepD);
-    if(di>=0){ playIndex(di); DATA[di]&&document.querySelectorAll(".row")[di]?.scrollIntoView({block:"center"}); }
+    if(di>=0){
+      const s=DATA[di];
+      const banner=document.createElement("div");
+      banner.className="autoplay-banner";
+      banner.innerHTML=`
+        <div class="ab-kicker">Inspiracja</div>
+        <div class="ab-title">${esc(s.tytul)}</div>
+        ${s.mowca?`<div class="ab-by">${esc(s.mowca)}</div>`:""}
+        <button class="ab-btn">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+          Odtwórz inspirację
+        </button>
+        <button class="ab-skip">Przeglądaj bez odtwarzania</button>`;
+      document.body.appendChild(banner);
+      banner.querySelector(".ab-btn").onclick=()=>{
+        banner.remove(); playIndex(di);
+        document.querySelectorAll(".row")[di]?.scrollIntoView({block:"center"});
+      };
+      banner.querySelector(".ab-skip").onclick=()=>{
+        banner.remove();
+        document.querySelectorAll(".row")[di]?.scrollIntoView({block:"center"});
+      };
+    }
   } else {
     restoreState();
   }

@@ -153,8 +153,7 @@
   .row .main .ttl{font-family:var(--serif);font-weight:500;font-size:19px;
     line-height:1.25;letter-spacing:-.01em}
   .row .main .sub{font-size:13.5px;color:var(--muted);margin-top:3px}
-  .row .seria{font-size:12px;color:var(--accent);background:var(--accent-soft);
-    padding:4px 10px;border-radius:999px;white-space:nowrap}
+  .row .seria{font-size:12px;padding:4px 10px;border-radius:999px;white-space:nowrap}
   .row .go{width:38px;height:38px;border-radius:50%;border:1px solid var(--line);
     display:grid;place-items:center;color:var(--ink);transition:all .15s;flex:none}
   li.row:hover .go{background:var(--ink);border-color:var(--ink);color:#fff}
@@ -469,7 +468,7 @@ function renderList(){
           <div class="ttl">${esc(s.tytul)}</div>
           <div class="sub">${esc(s.mowca)}${s.fragment?" · "+esc(s.fragment):""}</div>
         </div>
-        ${s.seria?`<span class="seria">${esc(s.seria)}</span>`:`<span></span>`}
+        ${s.seria?(()=>{const c=seriaColor(s.seria);return`<span class="seria" style="background:${c.bg};color:${c.fg}">${esc(s.seria)}</span>`;})():`<span></span>`}
         <button class="dl" onclick="downloadAudio(${i},event)" aria-label="Pobierz"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v10M7 15l5 5 5-5"/><path d="M4 20h16"/></svg></button>
         <span class="go"><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></span>
       </div>
@@ -477,6 +476,17 @@ function renderList(){
   }).join("");
 }
 function esc(s){return String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));}
+
+const SERIA_PALETTE=[
+  {bg:"#E8F4F8",fg:"#1A6A8A"},{bg:"#EEF4E8",fg:"#3A6E1A"},{bg:"#F5EEF8",fg:"#6A2A8A"},
+  {bg:"#FEF4E8",fg:"#8A5A1A"},{bg:"#F8E8E8",fg:"#8A1A1A"},{bg:"#E8F8F4",fg:"#1A6A5A"},
+  {bg:"#F8F4E8",fg:"#6A5A1A"},{bg:"#EEE8F8",fg:"#3A1A8A"},{bg:"#F8EEF4",fg:"#8A1A5A"},
+  {bg:"#E8EEF8",fg:"#1A3A8A"},
+];
+function seriaColor(name){
+  let h=0; for(let i=0;i<name.length;i++) h=(h*31+name.charCodeAt(i))>>>0;
+  return SERIA_PALETTE[h%SERIA_PALETTE.length];
+}
 
 /* ---------- player ---------- */
 function playIndex(i){

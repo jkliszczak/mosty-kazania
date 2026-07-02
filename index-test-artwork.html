@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Inspiracje — Kościół MOSTY</title>
+<meta name="description" content="Niedzielne inspiracje Kościoła MOSTY — słuchaj online.">
+<link rel="icon" href="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ0-uUlchum4G_l1JuX2I5IYpfdYY_JzX7IAcOUzLj-qaVpr8Rt31tRfevj&s=10">
+<meta property="og:title" content="Inspiracje — Kościół MOSTY">
+<meta property="og:description" content="Wszystkie niedzielne inspiracje w jednym miejscu.">
+<meta property="og:image" content="https://kazania.kosciolmosty.pl/og-image.png">
+<meta property="og:url" content="https://kazania.kosciolmosty.pl/">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+
+<!--
+  ============================================================
+  KONFIGURACJA  —  to jedyne miejsce, które edytujesz
+  ============================================================
+  1. Utwórz folder na Dysku Google i udostępnij go:
+     „Każdy z linkiem → Przeglądający"
+     ID folderu to ciąg z URL-a po /folders/
+
+  2. Utwórz klucz API w Google Cloud Console:
+     console.cloud.google.com → APIs & Services → Credentials
+     → Create credentials → API key
+     Włącz „Google Drive API" w bibliotece.
+     Ogranicz klucz do Drive API + swojej domeny (zalecane).
+
+  3. Wklej oba poniżej. Zostaw puste, żeby zobaczyć tryb demo.
+
+  FORMAT NAZWY PLIKU (separator: " | "):
+    2026-06-22 | Paweł Kowalczyk | Most do Ojca | Ewangelia Jana | Jan 14,1-6.mp3
+    data         mówca              tytuł           seria (opcja)    fragment (opcja)
+  ============================================================
+-->
+<script>
+  const CONFIG = {
+    API_KEY:   "AIzaSyDwx_4bQ7bGo-gb4EOFSZqTErJXeVvdmBQ",
+    FOLDER_ID: "1kiDaBeKg2AoeASvjSlkW3KTVbBskRGqj",
+  };
+</script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,400;0,500;0,600;1,400&family=Hanken+Grotesk:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --paper:#F4F4F1;
+    --card:#FBFBF9;
+    --ink:#17181B;
+    --muted:#6F706B;
+    --faint:#9A9A93;
+    --line:#E3E2DC;
+    --accent:#2B5F74;
+    --accent-soft:#E7EEF1;
+    --serif:"Spectral",Georgia,serif;
+    --sans:"Hanken Grotesk",system-ui,sans-serif;
+    --mono:"JetBrains Mono",ui-monospace,monospace;
+    --maxw:920px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    background:var(--paper);color:var(--ink);
+    font-family:var(--sans);font-weight:400;line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+    padding-bottom:96px;
+  }
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 24px}
+  a{color:inherit}
+  ::selection{background:var(--accent);color:#fff}
+
+  /* ---------- bridge motif ---------- */
+  .bridge{display:inline-flex;align-items:center;gap:8px}
+  .bridge .span{height:1px;width:26px;background:var(--faint);position:relative}
+  .bridge .span::before{content:"";position:absolute;left:50%;top:50%;
+    width:4px;height:4px;border-radius:50%;background:var(--accent);
+    transform:translate(-50%,-50%)}
+
+  /* ---------- masthead ---------- */
+  header.site{padding:30px 0 26px;border-bottom:1px solid var(--line)}
+  .masthead{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+  .word{display:flex;align-items:center;gap:12px}
+  .word .name{font-family:var(--serif);font-weight:600;font-size:21px;letter-spacing:-.01em}
+  .word .name b{font-weight:600}
+  .kicker{font-family:var(--mono);font-size:11px;letter-spacing:.18em;
+    text-transform:uppercase;color:var(--muted)}
+  .links{display:flex;gap:20px;align-items:center}
+  .links a{font-size:13.5px;color:var(--muted);text-decoration:none;
+    display:inline-flex;align-items:center;gap:6px;transition:color .15s}
+  .links a:hover{color:var(--ink)}
+  .links svg{width:15px;height:15px;display:block}
+  .demo-pill{font-family:var(--mono);font-size:10.5px;letter-spacing:.06em;
+    color:var(--accent);background:var(--accent-soft);
+    padding:4px 9px;border-radius:999px;white-space:nowrap}
+
+  /* ---------- hero / latest ---------- */
+  .hero{padding-top:46px;padding-bottom:40px;border-bottom:1px solid var(--line)}
+  .hero .eyebrow{font-family:var(--mono);font-size:11.5px;letter-spacing:.15em;
+    text-transform:uppercase;color:var(--muted);margin-bottom:18px;
+    display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+  .hero .eyebrow .tag{color:var(--accent)}
+  .hero h1{font-family:var(--serif);font-weight:500;
+    font-size:clamp(30px,5.4vw,52px);line-height:1.08;letter-spacing:-.02em;
+    max-width:28ch}
+  .hero .by{margin-top:18px;font-size:16px;color:var(--muted)}
+  .hero .by b{color:var(--ink);font-weight:500}
+  .hero .desc{margin-top:16px;font-size:17px;max-width:60ch;color:#33342F}
+  .hero .scripture{margin-top:14px;font-family:var(--serif);font-style:italic;
+    font-size:16px;color:var(--accent)}
+  .hero .cta{margin-top:30px;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+
+  .play-btn{appearance:none;border:0;cursor:pointer;font-family:var(--sans);
+    display:inline-flex;align-items:center;gap:11px;
+    background:var(--ink);color:#fff;font-size:15px;font-weight:500;
+    padding:13px 22px 13px 18px;border-radius:999px;transition:transform .15s,opacity .15s}
+  .play-btn:hover{opacity:.9}
+  .play-btn:active{transform:scale(.98)}
+  .play-btn .ic{width:20px;height:20px;display:grid;place-items:center}
+  .play-btn .dur{font-family:var(--mono);font-size:12.5px;opacity:.7}
+
+  /* ---------- controls ---------- */
+  .controls{padding:26px 0;position:sticky;top:0;background:var(--paper);z-index:20;
+    border-bottom:1px solid var(--line)}
+  .searchrow{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+  .search{flex:1;min-width:200px;position:relative}
+  .search svg{position:absolute;left:14px;top:50%;transform:translateY(-50%);
+    width:16px;height:16px;color:var(--faint)}
+  .search input{width:100%;font-family:var(--sans);font-size:15px;color:var(--ink);
+    background:var(--card);border:1px solid var(--line);border-radius:10px;
+    padding:11px 14px 11px 40px;transition:border-color .15s}
+  .search input:focus{outline:none;border-color:var(--accent)}
+  .search input::placeholder{color:var(--faint)}
+  select.speaker{font-family:var(--sans);font-size:14px;color:var(--ink);
+    background:var(--card);border:1px solid var(--line);border-radius:10px;
+    padding:11px 34px 11px 14px;cursor:pointer;appearance:none;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236F706B' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat:no-repeat;background-position:right 12px center}
+  select.speaker:focus{outline:none;border-color:var(--accent)}
+  .pills{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+  .pill{font-family:var(--sans);font-size:13px;cursor:pointer;
+    background:transparent;border:1px solid var(--line);color:var(--muted);
+    padding:6px 14px;border-radius:999px;transition:all .15s}
+  .pill:hover{border-color:var(--faint);color:var(--ink)}
+  .pill.active{background:var(--ink);border-color:var(--ink);color:#fff}
+
+  /* ---------- list ---------- */
+  .listhead{display:flex;align-items:baseline;justify-content:space-between;
+    padding:34px 0 8px}
+  .listhead h2{font-family:var(--serif);font-weight:500;font-size:18px}
+  .listhead .count{font-family:var(--mono);font-size:12px;color:var(--faint)}
+  ul.list{list-style:none}
+  li.row{border-bottom:1px solid var(--line);cursor:pointer;transition:background .15s}
+  li.row:hover{background:var(--card)}
+  .row-inner{display:grid;grid-template-columns:auto 1fr auto auto auto auto;align-items:center;
+    gap:18px;padding:14px 0}
+  .row .artwork-cell{display:flex;flex-direction:column;align-items:center;gap:6px}
+  .row .artwork-cell img,.row .artwork-cell svg{width:64px;height:64px;display:block;border-radius:10px;object-fit:cover}
+  .row .artwork-date{font-family:var(--mono);font-size:11px;color:var(--muted);white-space:nowrap;text-align:center}
+  .row .date{font-family:var(--mono);font-size:12px;color:var(--muted);white-space:nowrap}
+  .row .main .ttl{font-family:var(--serif);font-weight:500;font-size:19px;
+    line-height:1.25;letter-spacing:-.01em}
+  .row .main .sub{font-size:13.5px;color:var(--muted);margin-top:3px}
+  .row .seria{font-size:12px;padding:4px 10px;border-radius:999px;white-space:nowrap}
+  .row .go{width:38px;height:38px;border-radius:50%;border:1px solid var(--line);
+    display:grid;place-items:center;color:var(--ink);transition:all .15s;flex:none}
+  li.row:hover .go{background:var(--ink);border-color:var(--ink);color:#fff}
+  li.row.playing{background:var(--accent-soft)}
+  li.row.playing .go{background:var(--accent);border-color:var(--accent);color:#fff}
+  .row .dl,.row .sh{width:38px;height:38px;border-radius:50%;border:1px solid var(--line);
+    display:grid;place-items:center;color:var(--muted);transition:all .15s;flex:none;
+    background:transparent;cursor:pointer;text-decoration:none}
+  .row .dl:hover{border-color:var(--accent);color:var(--accent)}
+  .row .sh:hover{border-color:var(--accent);color:var(--accent)}
+  .psh{flex:none;width:34px;height:34px;border:0;background:transparent;cursor:pointer;
+    color:var(--faint);border-radius:50%;display:grid;place-items:center;transition:color .15s,background .15s}
+  .psh:hover{color:var(--ink);background:var(--line)}
+  .autoplay-banner{position:fixed;inset:0;z-index:200;
+    background:rgba(23,24,27,.88);backdrop-filter:blur(8px);
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    gap:24px;padding:32px;text-align:center;animation:rise .3s ease;color:#fff}
+  .autoplay-banner .ab-kicker{font-family:var(--mono);font-size:11px;letter-spacing:.18em;
+    text-transform:uppercase;color:rgba(255,255,255,.5)}
+  .autoplay-banner .ab-title{font-family:var(--serif);font-weight:500;
+    font-size:clamp(22px,4vw,38px);line-height:1.15;max-width:20ch;color:#fff}
+  .autoplay-banner .ab-by{font-size:15px;color:rgba(255,255,255,.6)}
+  .autoplay-banner .ab-btn{appearance:none;border:0;cursor:pointer;
+    font-family:var(--sans);display:inline-flex;align-items:center;gap:12px;
+    background:var(--ink);color:#fff;font-size:16px;font-weight:500;
+    padding:16px 28px 16px 22px;border-radius:999px;
+    transition:transform .15s,opacity .15s;margin-top:8px}
+  .autoplay-banner .ab-btn:hover{opacity:.9}
+  .autoplay-banner .ab-btn:active{transform:scale(.97)}
+  .autoplay-banner .ab-skip{font-size:13px;color:var(--faint);cursor:pointer;
+    background:none;border:0;text-decoration:underline;text-underline-offset:3px}
+  .autoplay-banner .ab-skip:hover{color:var(--muted)}
+  .toast{position:fixed;bottom:96px;left:50%;transform:translateX(-50%) translateY(12px);
+    background:var(--ink);color:#fff;font-size:13px;font-weight:500;
+    padding:10px 18px;border-radius:999px;opacity:0;pointer-events:none;
+    transition:opacity .2s,transform .2s;z-index:100}
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+  .pdl{flex:none;width:34px;height:34px;border:0;background:transparent;cursor:pointer;
+    color:var(--faint);border-radius:50%;display:grid;place-items:center;transition:color .15s,background .15s}
+  .pdl:hover{color:var(--ink);background:var(--line)}
+
+  .empty{padding:60px 8px;text-align:center;color:var(--muted)}
+  .empty p{font-family:var(--serif);font-size:18px;color:var(--ink);margin-bottom:6px}
+
+  footer.site{padding:48px 0 30px;color:var(--faint);font-size:13px;
+    display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
+  footer .bridge .span{width:40px}
+
+  /* ---------- sticky player (the bridge) ---------- */
+  .player{position:fixed;left:0;right:0;bottom:0;z-index:50;
+    background:rgba(251,251,249,.92);backdrop-filter:blur(12px);
+    border-top:1px solid var(--line);transform:translateY(110%);
+    transition:transform .28s cubic-bezier(.2,.7,.3,1)}
+  .player.up{transform:translateY(0)}
+  .player-inner{max-width:var(--maxw);margin:0 auto;padding:13px 24px;
+    display:flex;align-items:center;gap:18px}
+  .pp{width:46px;height:46px;flex:none;border:0;border-radius:50%;cursor:pointer;
+    background:var(--accent);color:#fff;display:grid;place-items:center;transition:transform .15s}
+  .pp:hover{transform:scale(1.05)}
+  .pmeta{flex:none;width:210px;min-width:0}
+  .pmeta .pt{font-family:var(--serif);font-weight:500;font-size:15px;
+    white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .pmeta .ps{font-size:12px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .ptrack{flex:1;display:flex;align-items:center;gap:12px;min-width:0}
+  .ptime{font-family:var(--mono);font-size:11.5px;color:var(--muted);white-space:nowrap}
+  /* bridge-line seek bar */
+  .seek{flex:1;-webkit-appearance:none;appearance:none;height:18px;background:transparent;cursor:pointer}
+  .seek::-webkit-slider-runnable-track{height:2px;border-radius:2px;
+    background:linear-gradient(to right,var(--accent) var(--p,0%),var(--line) var(--p,0%))}
+  .seek::-moz-range-track{height:2px;border-radius:2px;background:var(--line)}
+  .seek::-moz-range-progress{height:2px;border-radius:2px;background:var(--accent)}
+  .seek::-webkit-slider-thumb{-webkit-appearance:none;width:11px;height:11px;border-radius:50%;
+    background:var(--accent);margin-top:-4.5px;border:2px solid var(--card)}
+  .seek::-moz-range-thumb{width:11px;height:11px;border-radius:50%;background:var(--accent);border:2px solid var(--card)}
+  .pclose{flex:none;width:34px;height:34px;border:0;background:transparent;cursor:pointer;
+    color:var(--faint);border-radius:50%;display:grid;place-items:center;transition:color .15s,background .15s}
+  .pclose:hover{color:var(--ink);background:var(--line)}
+
+  @media (max-width:680px){
+    .row-inner{grid-template-columns:1fr auto;gap:10px 14px;padding:16px 6px}
+    .row .date{grid-column:1/-1;order:-1}
+
+    .row .dl,.row .sh{display:none}
+    .hero{padding-top:34px;padding-bottom:30px}
+    .pmeta{width:auto;flex:1}
+    .ptrack{display:none}
+    .player-inner{gap:12px}
+  }
+  @media (prefers-reduced-motion:reduce){
+    *{transition:none!important;animation:none!important}
+  }
+
+  .reveal{opacity:0;transform:translateY(10px);animation:rise .6s ease forwards}
+  @keyframes rise{to{opacity:1;transform:none}}
+</style>
+</head>
+<body>
+
+<header class="site">
+  <div class="wrap masthead">
+    <div class="word">
+      <span class="bridge">
+        <span class="name">Kościół <b>MOSTY</b></span>
+        <span class="span"></span>
+        <span class="kicker">Inspiracje</span>
+      </span>
+    </div>
+    <div class="links">
+      <span class="demo-pill" id="demoPill" hidden>tryb demo — podłącz Arkusz</span>
+      <a href="https://www.facebook.com/kosciolmosty" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M22 12a10 10 0 1 0-11.6 9.9v-7H7.9V12h2.5V9.8c0-2.5 1.5-3.9 3.8-3.9 1.1 0 2.2.2 2.2.2v2.5h-1.2c-1.2 0-1.6.8-1.6 1.6V12h2.7l-.4 2.9h-2.3v7A10 10 0 0 0 22 12Z"/></svg>
+        Facebook
+      </a>
+    </div>
+  </div>
+</header>
+
+<main id="app">
+  <section class="hero wrap" id="hero" aria-live="polite"></section>
+
+  <div class="controls">
+    <div class="wrap">
+      <div class="searchrow">
+        <label class="search">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+          <input id="q" type="search" placeholder="Szukaj inspiracji, mówcy lub serii…" autocomplete="off">
+        </label>
+        <select class="speaker" id="speaker" aria-label="Filtruj według mówcy">
+          <option value="">Wszyscy mówcy</option>
+        </select>
+      </div>
+      <div class="pills" id="seriesPills"></div>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <div class="listhead">
+      <h2>Archiwum</h2>
+      <span class="count" id="count"></span>
+    </div>
+    <ul class="list" id="list"></ul>
+  </div>
+</main>
+
+<footer class="site">
+  <div class="wrap" style="display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;width:100%">
+    <span>Kościół MOSTY · Wrocław</span>
+    <span class="bridge"><span class="kicker">słuchaj</span><span class="span"></span><span class="kicker">rozważaj</span></span>
+  </div>
+</footer>
+
+<!-- sticky player -->
+<div class="player" id="player" role="region" aria-label="Odtwarzacz">
+  <div class="player-inner">
+    <button class="pp" id="pp" aria-label="Odtwórz / wstrzymaj">
+      <svg id="ppIcon" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+    </button>
+    <div class="pmeta">
+      <div class="pt" id="pTitle">—</div>
+      <div class="ps" id="pSub">—</div>
+    </div>
+    <div class="ptrack">
+      <span class="ptime" id="pCur">0:00</span>
+      <input class="seek" id="seek" type="range" min="0" max="1000" value="0" aria-label="Pozycja nagrania">
+      <span class="ptime" id="pDur">0:00</span>
+    </div>
+    <button class="psh" id="pSh" aria-label="Udostępnij inspirację">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="m8.59 13.51 6.83 3.98M15.41 6.51l-6.82 3.98"/></svg>
+    </button>
+    <button class="pdl" id="pDl" aria-label="Pobierz inspirację">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v10M7 15l5 5 5-5"/><path d="M4 20h16"/></svg>
+    </button>
+    <button class="pclose" id="pClose" aria-label="Zamknij odtwarzacz">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg>
+    </button>
+  </div>
+</div>
+<div class="toast" id="toast">Skopiowano link!</div>
+<audio id="audio" preload="none" referrerpolicy="origin"></audio>
+
+<script>
+/* ---------- sample data (demo) ---------- */
+const SAMPLE = [
+  {data:"2026-06-29",tytul:"Jedno Ciało: Dlaczego szukam spełnienia w drugim człowieku?",mowca:"Beniamin Zwoliński",seria:"BLISKO",fragment:"",audio:"https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"},
+  {data:"2026-06-22",tytul:"Jedno Ciało: Czy mogę być w pełni znany?",mowca:"Konrad Jaguszewski",seria:"BLISKO",fragment:"",audio:"https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3"},
+  {data:"2026-06-15",tytul:"Jedno Ciało: Kim jestem bez relacji?",mowca:"Konrad Jaguszewski",seria:"BLISKO",fragment:"",audio:"https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3"},
+  {data:"2026-05-18",tytul:"Rekalibracja: Zacznij od nowa",mowca:"Beniamin Zwoliński",seria:"Rekalibracja",fragment:"",audio:"https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3"},
+  {data:"2026-05-11",tytul:"Rekalibracja: Co naprawdę cenisz?",mowca:"Konrad Jaguszewski",seria:"Rekalibracja",fragment:"",audio:"https://www.soundhelix.com/examples/mp3/SoundHelix-Song-5.mp3"},
+  {data:"2026-05-04",tytul:"Gościnna inspiracja: Bóg szuka",mowca:"Gość specjalny",seria:"Gościnna inspiracja",fragment:"",audio:"https://www.soundhelix.com/examples/mp3/SoundHelix-Song-6.mp3"},
+  {data:"2026-04-27",tytul:"Inspiracja bez serii",mowca:"Konrad Jaguszewski",seria:"",fragment:"",audio:"https://www.soundhelix.com/examples/mp3/SoundHelix-Song-7.mp3"},
+];
+
+/* ---------- helpers ---------- */
+const $=s=>document.querySelector(s);
+const audio=$("#audio");
+let DATA=[], current=null, isDemo=false;
+
+function parseDate(s){
+  s=(s||"").trim();
+  let m=s.match(/^(\d{4})-(\d{1,2})-(\d{1,2})/);
+  if(m) return new Date(+m[1],+m[2]-1,+m[3]);
+  m=s.match(/^(\d{1,2})[.\/-](\d{1,2})[.\/-](\d{4})/);
+  if(m) return new Date(+m[3],+m[2]-1,+m[1]);
+  const d=new Date(s); return isNaN(d)?new Date(0):d;
+}
+const MIES=["stycznia","lutego","marca","kwietnia","maja","czerwca","lipca","sierpnia","września","października","listopada","grudnia"];
+function fmtLong(d){return d.getDate()+" "+MIES[d.getMonth()]+" "+d.getFullYear();}
+function fmtShort(d){return String(d.getDate()).padStart(2,"0")+"."+String(d.getMonth()+1).padStart(2,"0")+"."+d.getFullYear();}
+function fmtTime(s){if(!s||isNaN(s))return"0:00";const m=Math.floor(s/60),x=Math.floor(s%60);return m+":"+String(x).padStart(2,"0");}
+
+/* parse filename: "2026-06-22 | Mówca | Tytuł | Seria | Fragment.mp3" */
+function parseFilename(name){
+  const base=name.replace(/\.[^/.]+$/,"");
+  const parts=base.split("|").map(p=>p.trim());
+  return {
+    data:  parts[0]||"",
+    mowca: parts[1]||"",
+    tytul: parts[2]||base,
+    seria: parts[3]||"",
+    fragment: parts[4]||"",
+  };
+}
+
+async function fetchDrivePage(token){
+  let url="https://www.googleapis.com/drive/v3/files"
+    +"?q="+encodeURIComponent("'"+CONFIG.FOLDER_ID+"' in parents and trashed=false")
+    +"&key="+CONFIG.API_KEY
+    +"&fields=nextPageToken,files(id,name)"
+    +"&orderBy=name+desc"
+    +"&pageSize=100";
+  if(token) url+="&pageToken="+token;
+  const res=await fetch(url);
+  if(!res.ok) throw new Error("Drive API "+res.status);
+  return res.json();
+}
+
+async function loadData(){
+  if(CONFIG.API_KEY && CONFIG.FOLDER_ID){
+    try{
+      let files=[], token=null;
+      do{
+        const page=await fetchDrivePage(token);
+        files=files.concat(page.files||[]);
+        token=page.nextPageToken||null;
+      }while(token);
+      const audio_files=files.filter(f=>/\.(mp3|m4a|wav|ogg|aac)$/i.test(f.name));
+      if(audio_files.length) return audio_files.map(normalizeFromFile);
+      throw new Error("brak plików audio w folderze");
+    }catch(e){ console.warn("Drive API — używam danych demo:",e); }
+  }
+  isDemo=true;
+  return SAMPLE.map(normalizeSample);
+}
+
+function normalizeFromFile(file){
+  const meta=parseFilename(file.name);
+  return {
+    data: meta.data, _d: parseDate(meta.data),
+    tytul: meta.tytul,
+    mowca: meta.mowca,
+    seria: meta.seria,
+    fragment: meta.fragment,
+    opis: "",
+    audio: "https://www.googleapis.com/drive/v3/files/"+file.id+"?alt=media&key="+CONFIG.API_KEY,
+    okladka: ""
+  };
+}
+
+function normalizeSample(o){
+  return {
+    data:o.data||"", _d:parseDate(o.data),
+    tytul:o.tytul||"Bez tytułu",
+    mowca:o.mowca||"", seria:o.seria||"",
+    opis:"", fragment:o.fragment||"",
+    audio:o.audio||"", okladka:""
+  };
+}
+
+/* ---------- rendering ---------- */
+const state={q:"",seria:"",mowca:""};
+
+function filtered(){
+  return DATA.filter(s=>{
+    if(state.seria && s.seria!==state.seria) return false;
+    if(state.mowca && s.mowca!==state.mowca) return false;
+    if(state.q){
+      const t=(s.tytul+" "+s.mowca+" "+s.seria+" "+s.opis).toLowerCase();
+      if(!t.includes(state.q.toLowerCase())) return false;
+    }
+    return true;
+  });
+}
+
+function renderHero(){
+  const s=DATA[0]; if(!s){$("#hero").innerHTML="";return;}
+  $("#hero").innerHTML=`
+    <div class="reveal">
+      <div class="eyebrow">
+        <span>Najnowsza inspiracja</span>
+        <span>${fmtLong(s._d)}</span>
+        ${s.seria?`<span class="tag">${esc(s.seria)}</span>`:""}
+      </div>
+      <h1>${esc(s.tytul)}</h1>
+      ${s.mowca?`<div class="by"><b>${esc(s.mowca)}</b></div>`:""}
+      ${s.opis?`<p class="desc">${esc(s.opis)}</p>`:""}
+      ${s.fragment?`<div class="scripture">${esc(s.fragment)}</div>`:""}
+      <div class="cta">
+        <button class="play-btn" onclick="playIndex(0)">
+          <span class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></span>
+          Słuchaj inspiracji
+        </button>
+      </div>
+    </div>`;
+}
+
+function renderControls(){
+  const series=[...new Set(DATA.map(s=>s.seria).filter(Boolean))];
+  const sp=$("#seriesPills");
+  sp.innerHTML=`<button class="pill ${state.seria===""?"active":""}" data-s="">Wszystkie serie</button>`+
+    series.map(x=>`<button class="pill ${state.seria===x?"active":""}" data-s="${esc(x)}">${esc(x)}</button>`).join("");
+  sp.querySelectorAll(".pill").forEach(b=>b.onclick=()=>{state.seria=b.dataset.s;renderControls();renderList();});
+
+  const speakers=[...new Set(DATA.map(s=>s.mowca).filter(Boolean))];
+  const sel=$("#speaker");
+  sel.innerHTML=`<option value="">Wszyscy mówcy</option>`+
+    speakers.map(x=>`<option value="${esc(x)}" ${state.mowca===x?"selected":""}>${esc(x)}</option>`).join("");
+}
+
+function renderList(){
+  const items=filtered();
+  $("#count").textContent=items.length+(items.length===1?" inspiracja":(items.length<5&&items.length>1?" inspiracje":" inspiracji"));
+  const list=$("#list");
+  if(!items.length){
+    list.innerHTML=`<div class="empty"><p>Nic nie znaleźliśmy</p><span>Spróbuj innego słowa albo wyczyść filtry.</span></div>`;
+    return;
+  }
+  list.innerHTML=items.map(s=>{
+    const i=DATA.indexOf(s);
+    const on=current===i?"playing":"";
+    return `<li class="row ${on}" onclick="playIndex(${i})">
+      <div class="row-inner">
+        <div class="artwork-cell">${artworkSVG(s)}<span class="artwork-date">${fmtShort(s._d)}</span></div>
+        <div class="main">
+          <div class="ttl">${esc(s.tytul)}</div>
+          <div class="sub">${esc(s.mowca)}${s.fragment?" · "+esc(s.fragment):""}</div>
+        </div>
+        ${s.seria?(()=>{const c=seriaColor(s.seria);return`<span class="seria" style="background:${c.bg};color:${c.fg}">${esc(s.seria)}</span>`;})():`<span></span>`}
+        <button class="sh" onclick="shareInspiracja(${i},event)" aria-label="Udostępnij"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="m8.59 13.51 6.83 3.98M15.41 6.51l-6.82 3.98"/></svg></button>
+        <button class="dl" onclick="downloadAudio(${i},event)" aria-label="Pobierz"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v10M7 15l5 5 5-5"/><path d="M4 20h16"/></svg></button>
+        <span class="go"><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></span>
+      </div>
+    </li>`;
+  }).join("");
+}
+function esc(s){return String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));}
+
+const ARTWORK_GRADIENTS=[
+  ["#2B5F74","#1a3d4e"],["#5C7A3E","#3a5228"],["#7A3E6B","#4e2845"],
+  ["#7A5C3E","#4e3a28"],["#7A3E3E","#4e2828"],["#3E7A6B","#284e45"],
+  ["#6B7A3E","#454e28"],["#3E3E7A","#28284e"],["#7A3E5C","#4e2838"],
+  ["#3E5C7A","#28384e"],
+];
+function artworkGradient(name){
+  let h=0; for(let i=0;i<name.length;i++) h=(h*31+name.charCodeAt(i))>>>0;
+  return ARTWORK_GRADIENTS[h%ARTWORK_GRADIENTS.length];
+}
+function artworkInitials(name){
+  return name.split(" ").slice(0,2).map(w=>w[0]||"").join("").toUpperCase();
+}
+const COVERS_BASE="https://raw.githubusercontent.com/jkliszczak/mosty-kazania/main/covers/";
+function gradientSVG(key){
+  const [c1,c2]=artworkGradient(key);
+  const initials=artworkInitials(key)||"♪";
+  const id="g"+key.replace(/\W/g,"");
+  return `<svg viewBox="0 0 56 56" xmlns="http://www.w3.org/2000/svg">
+    <defs><linearGradient id="${id}" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="${c1}"/><stop offset="100%" stop-color="${c2}"/>
+    </linearGradient></defs>
+    <rect width="56" height="56" fill="url(#${id})"/>
+    <text x="28" y="35" text-anchor="middle" font-family="system-ui,sans-serif"
+      font-size="${initials.length>2?14:17}" font-weight="700" fill="rgba(255,255,255,.9)">${initials}</text>
+  </svg>`;
+}
+function artworkSVG(s){
+  if(s.okladka) return `<img src="${esc(s.okladka)}" alt="">`;
+  const coverKey=s.seria||"Bez serii";
+  return `<img src="${COVERS_BASE}${encodeURIComponent(coverKey)}.png" alt="${esc(coverKey)}"
+    onerror="this.outerHTML=gradientSVG(this.dataset.key)" data-key="${esc(coverKey)}">`;
+}
+
+const SERIA_PALETTE=[
+  {bg:"#E8F4F8",fg:"#1A6A8A"},{bg:"#EEF4E8",fg:"#3A6E1A"},{bg:"#F5EEF8",fg:"#6A2A8A"},
+  {bg:"#FEF4E8",fg:"#8A5A1A"},{bg:"#F8E8E8",fg:"#8A1A1A"},{bg:"#E8F8F4",fg:"#1A6A5A"},
+  {bg:"#F8F4E8",fg:"#6A5A1A"},{bg:"#EEE8F8",fg:"#3A1A8A"},{bg:"#F8EEF4",fg:"#8A1A5A"},
+  {bg:"#E8EEF8",fg:"#1A3A8A"},
+];
+function seriaColor(name){
+  let h=0; for(let i=0;i<name.length;i++) h=(h*31+name.charCodeAt(i))>>>0;
+  return SERIA_PALETTE[h%SERIA_PALETTE.length];
+}
+
+/* ---------- player ---------- */
+function playIndex(i){
+  const s=DATA[i]; if(!s) return;
+  if(current===i){ togglePlay(); return; }
+  current=i;
+  if(!s.audio){ alert("Brak pliku audio dla tej inspiracji."); return; }
+  audio.src=s.audio; audio.play().catch(()=>{});
+  $("#pTitle").textContent=s.tytul;
+  $("#pSub").textContent=[s.mowca,s.seria].filter(Boolean).join(" · ");
+  $("#player").classList.add("up");
+  renderList();
+}
+function togglePlay(){ audio.paused?audio.play():audio.pause(); }
+function setPpIcon(playing){
+  $("#ppIcon").innerHTML=playing
+    ? '<path d="M6 5h4v14H6zM14 5h4v14h-4z"/>'
+    : '<path d="M8 5v14l11-7z"/>';
+}
+$("#pp").onclick=togglePlay;
+$("#pClose").onclick=()=>{audio.pause();audio.removeAttribute("src");audio.load();
+  $("#player").classList.remove("up");current=null;renderList();
+  localStorage.removeItem("mosty_current");localStorage.removeItem("mosty_time");};
+audio.addEventListener("play",()=>setPpIcon(true));
+audio.addEventListener("pause",()=>setPpIcon(false));
+audio.addEventListener("timeupdate",()=>{
+  const p=audio.duration?audio.currentTime/audio.duration:0;
+  const seek=$("#seek");seek.value=p*1000;seek.style.setProperty("--p",(p*100)+"%");
+  $("#pCur").textContent=fmtTime(audio.currentTime);
+});
+audio.addEventListener("loadedmetadata",()=>$("#pDur").textContent=fmtTime(audio.duration));
+audio.addEventListener("ended",()=>setPpIcon(false));
+$("#seek").addEventListener("input",e=>{
+  if(audio.duration) audio.currentTime=(e.target.value/1000)*audio.duration;
+});
+
+/* ---------- download ---------- */
+async function downloadAudio(i, e){
+  e.stopPropagation();
+  const s=DATA[i]; if(!s||!s.audio) return;
+  try{
+    const res=await fetch(s.audio);
+    const blob=await res.blob();
+    const url=URL.createObjectURL(blob);
+    const a=document.createElement("a");
+    a.href=url;
+    a.download=(s.tytul||"inspiracja")+".mp3";
+    a.click();
+    setTimeout(()=>URL.revokeObjectURL(url),10000);
+  }catch(_){ window.open(s.audio,"_blank"); }
+}
+$("#pDl").onclick=()=>{ if(current!==null) downloadAudio(current,{stopPropagation:()=>{}}); };
+
+/* ---------- localStorage ---------- */
+function saveState(){
+  if(current===null) return;
+  localStorage.setItem("mosty_current", current);
+  localStorage.setItem("mosty_time", audio.currentTime||0);
+}
+function restoreState(){
+  const i=localStorage.getItem("mosty_current");
+  const t=parseFloat(localStorage.getItem("mosty_time")||0);
+  if(i===null||!DATA[+i]) return;
+  current=+i;
+  const s=DATA[current];
+  audio.src=s.audio;
+  audio.currentTime=t;
+  $("#pTitle").textContent=s.tytul;
+  $("#pSub").textContent=[s.mowca,s.seria].filter(Boolean).join(" · ");
+  $("#player").classList.add("up");
+  renderList();
+}
+audio.addEventListener("timeupdate",saveState);
+
+/* ---------- share ---------- */
+let toastTimer=null;
+function showToast(){
+  const t=$("#toast");t.classList.add("show");
+  clearTimeout(toastTimer);
+  toastTimer=setTimeout(()=>t.classList.remove("show"),2200);
+}
+function shareInspiracja(i,e){
+  e.stopPropagation();
+  const s=DATA[i]; if(!s) return;
+  const url=location.origin+location.pathname+"?d="+encodeURIComponent(s.data);
+  navigator.clipboard.writeText(url).then(showToast).catch(()=>{
+    prompt("Skopiuj link:",url);
+  });
+}
+$("#pSh").onclick=()=>{ if(current!==null) shareInspiracja(current,{stopPropagation:()=>{}}); };
+
+/* ---------- search ---------- */
+$("#q").addEventListener("input",e=>{state.q=e.target.value;renderList();});
+$("#speaker").addEventListener("change",e=>{state.mowca=e.target.value;renderList();});
+
+/* ---------- boot ---------- */
+(async()=>{
+  DATA=await loadData();
+  DATA.sort((a,b)=>b._d-a._d);
+  if(isDemo) $("#demoPill").hidden=false;
+  renderHero();renderControls();renderList();
+  const deepD=new URLSearchParams(location.search).get("d");
+  if(deepD){
+    const di=DATA.findIndex(s=>s.data===deepD);
+    if(di>=0){
+      const s=DATA[di];
+      const banner=document.createElement("div");
+      banner.className="autoplay-banner";
+      banner.innerHTML=`
+        <div class="ab-kicker">Inspiracja</div>
+        <div class="ab-title">${esc(s.tytul)}</div>
+        ${s.mowca?`<div class="ab-by">${esc(s.mowca)}</div>`:""}
+        <button class="ab-btn">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+          Odtwórz inspirację
+        </button>
+        <button class="ab-skip">Przeglądaj bez odtwarzania</button>`;
+      document.body.appendChild(banner);
+      banner.querySelector(".ab-btn").onclick=()=>{
+        banner.remove(); playIndex(di);
+        document.querySelectorAll(".row")[di]?.scrollIntoView({block:"center"});
+      };
+      banner.querySelector(".ab-skip").onclick=()=>{
+        banner.remove();
+        document.querySelectorAll(".row")[di]?.scrollIntoView({block:"center"});
+      };
+    }
+  } else {
+    restoreState();
+  }
+})();
+</script>
+</body>
+</html>

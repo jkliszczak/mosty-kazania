@@ -374,7 +374,7 @@ function fmtTime(s){if(!s||isNaN(s))return"0:00";const m=Math.floor(s/60),x=Math
 /* parse filename: "2026-06-22 | Mówca | Tytuł | Seria | Fragment.mp3" */
 function parseFilename(name){
   const base=name.replace(/\.[^/.]+$/,"");
-  const parts=base.split("|").map(p=>p.trim());
+  const parts=base.split("|").map(p=>p.trim().normalize("NFC"));
   return {
     data:  parts[0]||"",
     mowca: parts[1]||"",

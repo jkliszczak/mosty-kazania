@@ -146,7 +146,12 @@
     background-repeat:no-repeat;background-position:right 12px center}
   select.speaker:focus{outline:none;border-color:var(--accent)}
   .pills{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
-  .pill{font-family:var(--sans);font-size:13px;cursor:pointer;
+  @media(max-width:680px){
+    .pills{flex-wrap:nowrap;overflow-x:auto;padding-bottom:6px;
+      -webkit-overflow-scrolling:touch;scrollbar-width:none}
+    .pills::-webkit-scrollbar{display:none}
+  }
+  .pill{font-family:var(--sans);font-size:13px;cursor:pointer;flex:none;
     background:transparent;border:1px solid var(--line);color:var(--muted);
     padding:6px 14px;border-radius:999px;transition:all .15s}
   .pill:hover{border-color:var(--faint);color:var(--ink)}

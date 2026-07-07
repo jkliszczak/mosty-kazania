@@ -494,7 +494,8 @@ function renderControls(){
     series.map(x=>`<button class="pill ${state.seria===x?"active":""}" data-s="${esc(x)}">${esc(x)}</button>`).join("");
   sp.querySelectorAll(".pill").forEach(b=>b.onclick=()=>{state.seria=b.dataset.s;renderControls();renderList();});
 
-  const speakers=[...new Set(DATA.map(s=>s.mowca).filter(Boolean))].sort((a,b)=>a.localeCompare(b,"pl"));
+  const lastName=n=>n.trim().split(" ").slice(-1)[0];
+  const speakers=[...new Set(DATA.map(s=>s.mowca).filter(Boolean))].sort((a,b)=>lastName(a).localeCompare(lastName(b),"pl"));
   const sel=$("#speaker");
   sel.innerHTML=`<option value="">Wszyscy mówcy</option>`+
     speakers.map(x=>`<option value="${esc(x)}" ${state.mowca===x?"selected":""}>${esc(x)}</option>`).join("");
